@@ -78,18 +78,12 @@ end;
 J = ((1/m) * sum(sum(-(yMatrix .* log(a3)) - ((1-yMatrix) .* (log(1-a3)))))) + ((lambda/(2*m)) * thetaSquaredSum);
 
 delta3 = (yMatrix - a3)';
-% delta3 = sum(delta3,2);
 delta2 = (Theta2' * delta3) .* [ones(size(z2, 1) ,1) sigmoidGradient(z2)]';
-% delta2 = sum(delta2,2);
-% delta1 = ([ones(size(Theta1,2),1) Theta1'] * delta2) .* sigmoidGradient(X');
-% delta1 = sum(delta1,2);
 
 Theta2_grad = (delta3 * a2);
 Theta2_grad = [(Theta2_grad(:,1) ./ -m) ((Theta2_grad(:,2:end) ./ -m) .+ ((lambda/m) .* Theta2(:,2:end)))];
-% Theta2_grad = Theta2_grad(2:end,:);
 Theta1_grad = (delta2(2:end,:) * X);
 Theta1_grad = [(Theta1_grad(:,1) ./ -m) ((Theta1_grad(:,2:end) ./ -m) .+ ((lambda/m) .* Theta1(:,2:end)))];
-% Theta1_grad = Theta1_grad(2:end,:);
 
 % -------------------------------------------------------------
 
