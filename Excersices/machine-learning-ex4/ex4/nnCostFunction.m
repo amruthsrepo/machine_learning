@@ -84,9 +84,11 @@ delta2 = (Theta2' * delta3) .* [ones(size(z2, 1) ,1) sigmoidGradient(z2)]';
 % delta1 = ([ones(size(Theta1,2),1) Theta1'] * delta2) .* sigmoidGradient(X');
 % delta1 = sum(delta1,2);
 
-Theta2_grad = (delta3 * a2) ./ -m;
+Theta2_grad = (delta3 * a2);
+Theta2_grad = [(Theta2_grad(:,1) ./ -m) ((Theta2_grad(:,2:end) ./ -m) .+ ((lambda/m) .* Theta2(:,2:end)))];
 % Theta2_grad = Theta2_grad(2:end,:);
-Theta1_grad = (delta2(2:end,:) * X) ./ -m;
+Theta1_grad = (delta2(2:end,:) * X);
+Theta1_grad = [(Theta1_grad(:,1) ./ -m) ((Theta1_grad(:,2:end) ./ -m) .+ ((lambda/m) .* Theta1(:,2:end)))];
 % Theta1_grad = Theta1_grad(2:end,:);
 
 % -------------------------------------------------------------
