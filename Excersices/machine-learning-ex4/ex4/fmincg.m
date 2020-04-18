@@ -24,18 +24,18 @@ function [X, fX, i] = fmincg(f, X, options, P1, P2, P3, P4, P5)
 %
 % Usage: [X, fX, i] = fmincg(f, X, options, P1, P2, P3, P4, P5)
 %
-% See also: checkgrad 
+% See also: checkgrad
 %
 % Copyright (C) 2001 and 2002 by Carl Edward Rasmussen. Date 2002-02-13
 %
 %
 % (C) Copyright 1999, 2000 & 2001, Carl Edward Rasmussen
-% 
+%
 % Permission is granted for anyone to copy, use, or modify these
 % programs and accompanying documents for purposes of research or
 % education, provided this copyright notice is retained, and note is
 % made of any changes that have been made.
-% 
+%
 % These programs and documents are distributed without any warranty,
 % express or implied.  As the programs were written for research
 % purposes only, they have not been tested to the degree that would be
@@ -54,6 +54,9 @@ else
     length = 100;
 end
 
+% Plotting Cost for each Iteration
+figure;
+plot(length, 0, '.', 'color', 'blue', 'MarkerSize', 10, 'LineWidth', 1)
 
 RHO = 0.01;                            % a bunch of constants for line searches
 SIG = 0.5;       % RHO and SIG are the constants in the Wolfe-Powell conditions
@@ -92,7 +95,7 @@ while i < abs(length)                                      % while not finished
   if length>0, M = MAX; else M = min(MAX, -length-i); end
   success = 0; limit = -1;                     % initialize quanteties
   while 1
-    while ((f2 > f1+z1*RHO*d1) || (d2 > -SIG*d1)) && (M > 0) 
+    while ((f2 > f1+z1*RHO*d1) || (d2 > -SIG*d1)) && (M > 0)
       limit = z1;                                         % tighten the bracket
       if f2 > f1
         z2 = z3 - (0.5*d3*z3*z3)/(d3*z3+f2-f3);                 % quadratic fit
@@ -147,12 +150,15 @@ while i < abs(length)                                      % while not finished
   if success                                         % if line search succeeded
     f1 = f2; fX = [fX' f1]';
     fprintf('%s %4i | Cost: %4.6e\r', S, i, f1);
+    hold on;
+    plot(i, f1, '.', 'color', 'blue', 'MarkerSize', 10, 'LineWidth', 1);
+    refresh()
     s = (df2'*df2-df1'*df2)/(df1'*df1)*s - df2;      % Polack-Ribiere direction
     tmp = df1; df1 = df2; df2 = tmp;                         % swap derivatives
     d2 = df1'*s;
     if d2 > 0                                      % new slope must be negative
       s = -df1;                              % otherwise use steepest direction
-      d2 = -s'*s;    
+      d2 = -s'*s;
     end
     z1 = z1 * min(RATIO, d1/(d2-realmin));          % slope ratio but max RATIO
     d1 = d2;
@@ -165,7 +171,7 @@ while i < abs(length)                                      % while not finished
     tmp = df1; df1 = df2; df2 = tmp;                         % swap derivatives
     s = -df1;                                                    % try steepest
     d1 = -s'*s;
-    z1 = 1/(1-d1);                     
+    z1 = 1/(1-d1);
     ls_failed = 1;                                    % this line search failed
   end
   if exist('OCTAVE_VERSION')
