@@ -7,6 +7,15 @@
         {
             "type": "OctaveDebugger",
             "request": "launch",
+            "name": "Launch ex6_spam.m",
+            "program": "ex6_spam.m",
+            "octave": "octave-5.2.0",
+            "sourceFolder": "${workspaceFolder}",
+            "autoTerminate": true
+        },
+        {
+            "type": "OctaveDebugger",
+            "request": "launch",
             "name": "Function or file to execute.",
             "program": "${command:AskForProgramName}",
             "octave": "octave-5.2.0",
