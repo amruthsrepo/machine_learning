@@ -7,6 +7,15 @@
         {
             "type": "OctaveDebugger",
             "request": "launch",
+            "name": "Launch ex8_cofi",
+            "program": "ex8_cofi",
+            "octave": "octave-5.2.0",
+            "sourceFolder": "${workspaceFolder}",
+            "autoTerminate": true
+        },
+        {
+            "type": "OctaveDebugger",
+            "request": "launch",
             "name": "Function or file to execute.",
             "program": "ex8",
             "octave": "octave-5.2.0",
