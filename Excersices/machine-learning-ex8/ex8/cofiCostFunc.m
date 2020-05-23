@@ -11,17 +11,17 @@ X = reshape(params(1:num_movies*num_features), num_movies, num_features);
 Theta = reshape(params(num_movies*num_features+1:end), ...
                 num_users, num_features);
 
-            
+
 % You need to return the following values correctly
 J = 0;
-X_grad = zeros(size(X));
-Theta_grad = zeros(size(Theta));
+X_grad = [];
+Theta_grad = [];
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: Compute the cost function and gradient for collaborative
 %               filtering. Concretely, you should first implement the cost
 %               function (without regularization) and make sure it is
-%               matches our costs. After that, you should implement the 
+%               matches our costs. After that, you should implement the
 %               gradient and use the checkCostFunction routine to check
 %               that the gradient is correct. Finally, you should implement
 %               regularization.
@@ -29,30 +29,30 @@ Theta_grad = zeros(size(Theta));
 % Notes: X - num_movies  x num_features matrix of movie features
 %        Theta - num_users  x num_features matrix of user features
 %        Y - num_movies x num_users matrix of user ratings of movies
-%        R - num_movies x num_users matrix, where R(i, j) = 1 if the 
+%        R - num_movies x num_users matrix, where R(i, j) = 1 if the
 %            i-th movie was rated by the j-th user
 %
 % You should set the following variables correctly:
 %
-%        X_grad - num_movies x num_features matrix, containing the 
+%        X_grad - num_movies x num_features matrix, containing the
 %                 partial derivatives w.r.t. to each element of X
-%        Theta_grad - num_users x num_features matrix, containing the 
+%        Theta_grad - num_users x num_features matrix, containing the
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
+hTheta = (X * Theta') - Y;
+J = sum(sum((hTheta .* R) .^ 2)) / 2;
+
+for i = 1:num_movies
+    ratedRows = find(R(i,:)==1);
+    X_grad = [X_grad; (((X(i, :) * Theta(ratedRows, :)') - Y(i, ratedRows)) * Theta(ratedRows, :))];
+end
 
 
-
-
-
-
-
-
-
-
-
-
-
+for i = 1:num_users
+    ratedRows = find(R(:,i)==1);
+    Theta_grad = [Theta_grad; (((X(ratedRows, :) * Theta(i, :)') - Y(ratedRows, i))' * X(ratedRows, :))];
+end
 
 
 % =============================================================
