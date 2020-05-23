@@ -7,8 +7,10 @@ function [J, grad] = cofiCostFunc(params, Y, R, num_users, num_movies, ...
 %
 
 % Unfold the U and W matrices from params
-X = reshape(params(1:num_movies*num_features), num_movies, num_features);
-Theta = reshape(params(num_movies*num_features+1:end), ...
+X_unfolded = params(1:num_movies*num_features);
+Theta_unfolded = params(num_movies*num_features+1:end);
+X = reshape(X_unfolded, num_movies, num_features);
+Theta = reshape(Theta_unfolded, ...
                 num_users, num_features);
 
 
@@ -41,17 +43,17 @@ Theta_grad = [];
 %
 
 hTheta = (X * Theta') - Y;
-J = sum(sum((hTheta .* R) .^ 2)) / 2;
+J = (sum(sum((hTheta .* R) .^ 2)) / 2) + ((lambda / 2) * (Theta_unfolded' * Theta_unfolded)) + ((lambda / 2) * (X_unfolded' * X_unfolded));
 
 for i = 1:num_movies
     ratedRows = find(R(i,:)==1);
-    X_grad = [X_grad; (((X(i, :) * Theta(ratedRows, :)') - Y(i, ratedRows)) * Theta(ratedRows, :))];
+    X_grad = [X_grad; (((X(i, :) * Theta(ratedRows, :)') - Y(i, ratedRows)) * Theta(ratedRows, :)) + (lambda * X(i, :))];
 end
 
 
 for i = 1:num_users
     ratedRows = find(R(:,i)==1);
-    Theta_grad = [Theta_grad; (((X(ratedRows, :) * Theta(i, :)') - Y(ratedRows, i))' * X(ratedRows, :))];
+    Theta_grad = [Theta_grad; (((X(ratedRows, :) * Theta(i, :)') - Y(ratedRows, i))' * X(ratedRows, :)) + (lambda * Theta(i, :))];
 end
 
 
